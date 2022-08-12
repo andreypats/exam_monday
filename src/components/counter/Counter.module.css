@@ -1,0 +1,13 @@
+.counter {
+    text-align: center;
+
+    border-color: black; /* Цвет границы */
+    border-style: solid; /* Стиль границы */
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #61dafb;
+}
+
+.h1Counter {
+    color: red;
+}

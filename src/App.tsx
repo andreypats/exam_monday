@@ -20,22 +20,38 @@ function App() {
         if (num < maxNum) {
             setNum(num + 1)
         }
-        console.log('onclickHandler1')
+        console.log('onclickHandlerInc')
     }
 
     const onclickHandlerReset = () => {
         setNum(minNum)
-        console.log('onclickHandler2')
+        console.log('onclickHandlerReset')
     }
 
     const setToLocalStorage = () => {
-        localStorage.setItem('counterNum', num.toString())
+        localStorage.setItem('localStorageNum', JSON.stringify(num))
+        localStorage.setItem('localStorageNum+1', JSON.stringify(num + 1))
         console.log('setToLocalStorage')
     }
 
     const getFromLocalStorage = () => {
-        //code
+        let numAsString = localStorage.getItem('localStorageNum')
+        if (numAsString) {
+            let newNum = JSON.parse(numAsString)
+            setNum(newNum)
+        }
         console.log('getFromLocalStorage')
+    }
+
+    const clearLocalStorage = () => {
+        localStorage.clear()
+        console.log('clearLocalStorage')
+        setNum(minNum)
+    }
+
+    const removeLocalStorage = () => {
+        localStorage.removeItem('localStorageNum+1')
+        console.log('removeLocalStorageNum+1')
     }
 
     return (
@@ -45,6 +61,8 @@ function App() {
             <Button name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
             <Button name={'setToLocalStorage'} callBack={setToLocalStorage}/>
             <Button name={'getFromLocalStorage'} callBack={getFromLocalStorage}/>
+            <Button name={'clearLocalStorage'} callBack={clearLocalStorage}/>
+            <Button name={'removeLocalStorage'} callBack={removeLocalStorage}/>
         </div>
     );
 }

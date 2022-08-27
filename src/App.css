@@ -1,7 +1,9 @@
 .App {
   position: absolute;
   top: 30%;
-  left: 45%;
+  left: 50%;
+  width: 200px;
+  margin-left: -100px;
   background-color: darkslategray;
   border-color: black; /* Цвет границы */
   border-style: solid; /* Стиль границы */

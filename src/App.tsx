@@ -1,23 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 import {Button} from "./components/button/Button";
 import {Counter} from "./components/counter/Counter";
+import {SetterMinMax} from "./components/setMinMax/SetMinMax";
+
+
 
 function App() {
 
-    const maxNum = 5
-    const minNum = 0
-
+    const [minNum, setMinNum] = useState<number>(0)
+    const [maxNum, setMaxNum] = useState<number>(5)
     const [num, setNum] = useState<number>(minNum)
 
-    // useEffect(() => {
-    //     let numAsString = localStorage.getItem('localStorageNum')
-    //     if (numAsString) {
-    //         let newNum = JSON.parse(numAsString)
-    //         setNum(newNum)
-    //         console.log('useEffectGetItem')
-    //     }
-    // },[])
+
+    useEffect(() => {
+        let numAsString = localStorage.getItem('localStorageNum')
+        if (numAsString) {
+            let newNum = JSON.parse(numAsString)
+            setNum(newNum)
+            console.log('useEffectGetItem')
+        }
+    },[])
 
     useEffect(() => {
         localStorage.setItem('localStorageNum', JSON.stringify(num))
@@ -40,6 +43,16 @@ function App() {
     const onclickHandlerReset = () => {
         setNum(minNum)
         console.log('onclickHandlerReset')
+    }
+
+    const onchangeMinInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setMinNum(Number(event.currentTarget.value))
+        console.log('onchangeMinInputHandler')
+    }
+
+    const onchangeMaxInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setMaxNum(Number(event.currentTarget.value))
+        console.log('onchangeMaxInputHandler')
     }
 
     // const setToLocalStorage = () => {
@@ -70,9 +83,17 @@ function App() {
 
     return (
         <div className="App">
-            <Counter num={num} maxNum={maxNum}/>
-            <Button name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
-            <Button name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
+            <div>
+                <SetterMinMax name={'SetMinNum'} minNum={minNum} callBack={onchangeMinInputHandler}/>
+                <SetterMinMax name={'SetMaxNum'} maxNum={maxNum} callBack={onchangeMaxInputHandler}/>
+                <Button name={'set'} callBack={onclickHandlerInc}/>
+            </div>
+            <div>
+                <Counter num={num} maxNum={maxNum}/>
+                <Button name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
+                <Button name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
+            </div>
+
             {/*<Button name={'setToLocalStorage'} callBack={setToLocalStorage}/>*/}
             {/*<Button name={'getFromLocalStorage'} callBack={getFromLocalStorage}/>*/}
             {/*<Button name={'clearLocalStorage'} callBack={clearLocalStorage}/>*/}
@@ -82,5 +103,3 @@ function App() {
 }
 
 export default App;
-
-//7:50

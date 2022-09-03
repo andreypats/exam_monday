@@ -4,14 +4,24 @@ import {Button} from "./components/button/Button";
 import {Counter} from "./components/counter/Counter";
 import {SetterMinMax} from "./components/setMinMax/SetMinMax";
 
-
-
 function App() {
 
-    const [minNum, setMinNum] = useState<number>(0)
-    const [maxNum, setMaxNum] = useState<number>(5)
-    const [num, setNum] = useState<number>(minNum)
+    let min = 0
+    let max = 5
 
+    let minNumAsString = localStorage.getItem('localStorageMinNum')
+    if (minNumAsString) {
+        min = JSON.parse(minNumAsString)
+    }
+
+    let maxNumAsString = localStorage.getItem('localStorageMaxNum')
+    if (maxNumAsString) {
+        max = JSON.parse(maxNumAsString)
+    }
+
+    const [num, setNum] = useState<number>(min)
+    const [minNum, setMinNum] = useState<number>(min)
+    const [maxNum, setMaxNum] = useState<number>(max)
 
     useEffect(() => {
         let numAsString = localStorage.getItem('localStorageNum')
@@ -20,29 +30,35 @@ function App() {
             setNum(newNum)
             console.log('useEffectGetItem')
         }
-    },[])
+    }, [])
 
     useEffect(() => {
         localStorage.setItem('localStorageNum', JSON.stringify(num))
     }, [num])
-    // useEffect выполняет колбэк функцию effect каждый раз, когда изменяется значение num, запписанное во второй параметр deps
+    // useEffect выполняет колбэк функцию effect каждый раз, когда изменяется значение num, записанное во второй параметр deps
 
     let disabledInc
     let disabledReset
+    //let disabledSet = true
 
-    num === maxNum ? disabledInc = true : disabledInc = false
-    num > minNum ? disabledReset = false : disabledReset = true
+    num === max ? disabledInc = true : disabledInc = false
+    num > min ? disabledReset = false : disabledReset = true
 
     const onclickHandlerInc = () => {
-        if (num < maxNum) {
-            setNum(num + 1)
-        }
+        setNum(num + 1)
         console.log('onclickHandlerInc')
     }
 
     const onclickHandlerReset = () => {
-        setNum(minNum)
+        setNum(min)
         console.log('onclickHandlerReset')
+    }
+
+    const onclickHandlerSet = () => {
+        localStorage.setItem('localStorageMinNum', JSON.stringify(minNum))
+        localStorage.setItem('localStorageMaxNum', JSON.stringify(maxNum))
+        setNum(minNum)
+        console.log('onclickHandlerSet')
     }
 
     const onchangeMinInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,10 +102,10 @@ function App() {
             <div>
                 <SetterMinMax name={'SetMinNum'} minNum={minNum} callBack={onchangeMinInputHandler}/>
                 <SetterMinMax name={'SetMaxNum'} maxNum={maxNum} callBack={onchangeMaxInputHandler}/>
-                <Button name={'set'} callBack={onclickHandlerInc}/>
+                <Button name={'set'} callBack={onclickHandlerSet}/>
             </div>
             <div>
-                <Counter num={num} maxNum={maxNum}/>
+                <Counter num={num} max={max}/>
                 <Button name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
                 <Button name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
             </div>

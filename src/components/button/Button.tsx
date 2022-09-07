@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 
 type ButtonPropsType = {
     name: string
-    disabled: boolean
+    disabled?: boolean
     callBack: ()=>void
 }
 

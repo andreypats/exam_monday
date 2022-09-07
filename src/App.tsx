@@ -24,7 +24,8 @@ function App() {
     const [maxNum, setMaxNum] = useState<number>(max)
     const [errorMin, setErrorMin] = useState<boolean>(false)
     const [errorMax, setErrorMax] = useState<boolean>(false)
-    const [disabledSet, setDisabledSet] = useState<boolean>(true)
+    const [disabledSet, setDisabledSet] = useState<boolean>(false)
+    const [inputValuesWindow, setInputValuesWindow] = useState<boolean>(false)
 
 
     useEffect(() => {
@@ -40,8 +41,8 @@ function App() {
     }, [num])
     // useEffect выполняет колбэк функцию effect каждый раз, когда изменяется значение num, записанное во второй параметр deps
 
-    let disabledInc
-    let disabledReset
+    let disabledInc: boolean
+    let disabledReset: boolean
 
     num === max ? disabledInc = true : disabledInc = false
     num > min ? disabledReset = false : disabledReset = true
@@ -58,7 +59,10 @@ function App() {
         localStorage.setItem('localStorageMinNum', JSON.stringify(minNum))
         localStorage.setItem('localStorageMaxNum', JSON.stringify(maxNum))
         setNum(minNum)
-        setDisabledSet(true)
+        setInputValuesWindow(false)
+    }
+    const onclickHandlerChangeWindow = () => {
+        setInputValuesWindow(true)
     }
 
     const onchangeMinInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -106,23 +110,35 @@ function App() {
     //     console.log('removeLocalStorageNum+1')
     // }
 
+    const counterWindows = () => {
+        if (inputValuesWindow) {
+            return (
+                <div className="SetterMinMax">
+                    <h3 style={{color: "whitesmoke"}}>Input values:</h3>
+                    <div className="Input">
+                        <SetterMinMax name={'start value'} minNum={minNum} callBack={onchangeMinInputHandler}
+                                      error={errorMin}/>
+                        <SetterMinMax name={'max value'} maxNum={maxNum} callBack={onchangeMaxInputHandler}
+                                      error={errorMax}/>
+                    </div>
+                    <ButtonComponent name={'set'} callBack={onclickHandlerSet} disabled={disabledSet}/>
+                </div>
+            )
+        } else {
+            return (
+                <div className="Counter">
+                    <Counter num={num} max={max}/>
+                    <ButtonComponent name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
+                    <ButtonComponent name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
+                    <ButtonComponent name={'set'} callBack={onclickHandlerChangeWindow}/>
+                </div>
+            )
+        }
+    }
+
     return (
         <div className="App">
-            <div className="SetterMinMax">
-                <h3 style={{color: "whitesmoke"}}>Input values:</h3>
-                <div className="Input">
-                    <SetterMinMax name={'start value'} minNum={minNum} callBack={onchangeMinInputHandler}
-                                  error={errorMin}/>
-                    <SetterMinMax name={'max value'} maxNum={maxNum} callBack={onchangeMaxInputHandler}
-                                  error={errorMax}/>
-                </div>
-                <ButtonComponent name={'set'} callBack={onclickHandlerSet} disabled={disabledSet}/>
-            </div>
-            <div className="Counter">
-                <Counter num={num} max={max}/>
-                <ButtonComponent name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
-                <ButtonComponent name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
-            </div>
+            {counterWindows()}
         </div>
 
         // <div className="App">

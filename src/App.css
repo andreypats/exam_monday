@@ -1,13 +1,38 @@
 .App {
   position: absolute;
-  top: 30%;
+  top: 20%;
   left: 50%;
-  width: 200px;
-  margin-left: -100px;
-  background-color: darkslategray;
-  border-color: black; /* Цвет границы */
-  border-style: solid; /* Стиль границы */
-  padding: 5px;
-  border-radius: 10px;
+  width: 300px;
+  margin-left: -200px;
 }
+
+.SetterMinMax {
+    background-color: black;
+    width: 300px;
+    margin-bottom: 20px;
+    border-color: whitesmoke; /* Цвет границы */
+    border-style: solid; /* Стиль границы */
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.Counter {
+    background-color: black;
+    width: 300px;
+    border-color: whitesmoke; /* Цвет границы */
+    border-style: solid; /* Стиль границы */
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.Input {
+    background-color: whitesmoke;
+    border-color: whitesmoke; /* Цвет границы */
+    border-style: solid; /* Стиль границы */
+    border-radius: 10px;
+    padding: 5px;
+}
+
 

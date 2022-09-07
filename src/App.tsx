@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
-import {Button} from "./components/button/Button";
+import {ButtonComponent} from "./components/button/Button";
 import {Counter} from "./components/counter/Counter";
 import {SetterMinMax} from "./components/setMinMax/SetMinMax";
 
@@ -22,6 +22,10 @@ function App() {
     const [num, setNum] = useState<number>(min)
     const [minNum, setMinNum] = useState<number>(min)
     const [maxNum, setMaxNum] = useState<number>(max)
+    const [errorMin, setErrorMin] = useState<boolean>(false)
+    const [errorMax, setErrorMax] = useState<boolean>(false)
+    const [disabledSet, setDisabledSet] = useState<boolean>(true)
+
 
     useEffect(() => {
         let numAsString = localStorage.getItem('localStorageNum')
@@ -31,7 +35,6 @@ function App() {
             console.log('useEffectGetItem')
         }
     }, [])
-
     useEffect(() => {
         localStorage.setItem('localStorageNum', JSON.stringify(num))
     }, [num])
@@ -39,7 +42,6 @@ function App() {
 
     let disabledInc
     let disabledReset
-    //let disabledSet = true
 
     num === max ? disabledInc = true : disabledInc = false
     num > min ? disabledReset = false : disabledReset = true
@@ -48,27 +50,34 @@ function App() {
         setNum(num + 1)
         console.log('onclickHandlerInc')
     }
-
     const onclickHandlerReset = () => {
         setNum(min)
         console.log('onclickHandlerReset')
     }
-
     const onclickHandlerSet = () => {
         localStorage.setItem('localStorageMinNum', JSON.stringify(minNum))
         localStorage.setItem('localStorageMaxNum', JSON.stringify(maxNum))
         setNum(minNum)
-        console.log('onclickHandlerSet')
+        setDisabledSet(true)
     }
 
     const onchangeMinInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setMinNum(Number(event.currentTarget.value))
-        console.log('onchangeMinInputHandler')
+        setDisabledSet(false)
+        setErrorMin(false)
+        if (Number(event.currentTarget.value) < 0 || Number(event.currentTarget.value) >= maxNum) {
+            setErrorMin(true)
+            setDisabledSet(true)
+        }
     }
-
     const onchangeMaxInputHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setMaxNum(Number(event.currentTarget.value))
-        console.log('onchangeMaxInputHandler')
+        setErrorMax(false)
+        setDisabledSet(false)
+        if (Number(event.currentTarget.value) <= minNum) {
+            setErrorMax(true)
+            setDisabledSet(true)
+        }
     }
 
     // const setToLocalStorage = () => {
@@ -99,22 +108,40 @@ function App() {
 
     return (
         <div className="App">
-            <div>
-                <SetterMinMax name={'SetMinNum'} minNum={minNum} callBack={onchangeMinInputHandler}/>
-                <SetterMinMax name={'SetMaxNum'} maxNum={maxNum} callBack={onchangeMaxInputHandler}/>
-                <Button name={'set'} callBack={onclickHandlerSet}/>
+            <div className="SetterMinMax">
+                <h3 style={{color: "whitesmoke"}}>Input values:</h3>
+                <div className="Input">
+                    <SetterMinMax name={'start value'} minNum={minNum} callBack={onchangeMinInputHandler}
+                                  error={errorMin}/>
+                    <SetterMinMax name={'max value'} maxNum={maxNum} callBack={onchangeMaxInputHandler}
+                                  error={errorMax}/>
+                </div>
+                <ButtonComponent name={'set'} callBack={onclickHandlerSet} disabled={disabledSet}/>
             </div>
-            <div>
+            <div className="Counter">
                 <Counter num={num} max={max}/>
-                <Button name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
-                <Button name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
+                <ButtonComponent name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
+                <ButtonComponent name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
             </div>
-
-            {/*<Button name={'setToLocalStorage'} callBack={setToLocalStorage}/>*/}
-            {/*<Button name={'getFromLocalStorage'} callBack={getFromLocalStorage}/>*/}
-            {/*<Button name={'clearLocalStorage'} callBack={clearLocalStorage}/>*/}
-            {/*<Button name={'removeLocalStorage'} callBack={removeLocalStorage}/>*/}
         </div>
+
+        // <div className="App">
+        //     <div>
+        //         <SetterMinMax name={'SetMinNum'} minNum={minNum} callBack={onchangeMinInputHandler}/>
+        //         <SetterMinMax name={'SetMaxNum'} maxNum={maxNum} callBack={onchangeMaxInputHandler}/>
+        //         <ButtonComponent name={'set'} callBack={onclickHandlerSet}/>
+        //     </div>
+        //     <div>
+        //         <Counter num={num} max={max}/>
+        //         <ButtonComponent name={'inc'} callBack={onclickHandlerInc} disabled={disabledInc}/>
+        //         <ButtonComponent name={'reset'} callBack={onclickHandlerReset} disabled={disabledReset}/>
+        //     </div>
+        //
+        //     {/*<Button name={'setToLocalStorage'} callBack={setToLocalStorage}/>*/}
+        //     {/*<Button name={'getFromLocalStorage'} callBack={getFromLocalStorage}/>*/}
+        //     {/*<Button name={'clearLocalStorage'} callBack={clearLocalStorage}/>*/}
+        //     {/*<Button name={'removeLocalStorage'} callBack={removeLocalStorage}/>*/}
+        // </div>
     );
 }
 

@@ -4,11 +4,13 @@
   left: 50%;
   width: 300px;
   margin-left: -200px;
+  background-color: whitesmoke;
 }
 
 .SetterMinMax {
     background-color: black;
     width: 300px;
+    margin-bottom: 20px;
     border-color: whitesmoke; /* Цвет границы */
     border-style: solid; /* Стиль границы */
     border-radius: 10px;
@@ -24,7 +26,6 @@
     border-radius: 10px;
     padding: 20px;
     text-align: center;
-    margin-top: 150px;
 }
 
 .Input {

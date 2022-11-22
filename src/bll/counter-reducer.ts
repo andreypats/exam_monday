@@ -1,3 +1,5 @@
+import {Dispatch} from "redux";
+import {AppStateType} from "./store";
 
 const initialState = {
     value: 0
@@ -23,6 +25,24 @@ export const counterReducer = (state: InitialStateType = initialState, action: A
 
 export const incValueAC = () => ({type: 'INC-VALUE'} as const)
 export const setValueFromLocalStorageAC = (value: number) => ({type: 'SET-VALUE-FROM-LOCAL-STORAGE', value} as const)
+
+
+// THUNK - функция, которая принимает dispatch, диспатчит экшен, и в ней можно работать с сайд эффектами
+export const incValueTC = () => (dispatch: Dispatch, getState: () => AppStateType) => {
+    // получаем текущее значение currentValue
+    let currentValue = getState().counter.value
+    // записываем currentValue в localStorage
+    localStorage.setItem('value', JSON.stringify(currentValue + 1))
+    dispatch(incValueAC())
+}
+export const setValueFromLocalStorageTC = () => (dispatch: Dispatch) => {
+    let valueAsString = localStorage.getItem('value')
+    if (valueAsString) {
+        let newValue = JSON.parse(valueAsString)
+        dispatch(setValueFromLocalStorageAC(newValue))
+    }
+}
+
 
 export type IncValueActionType = ReturnType<typeof incValueAC>
 export type SetValueFromLocalStorageType = ReturnType<typeof setValueFromLocalStorageAC>

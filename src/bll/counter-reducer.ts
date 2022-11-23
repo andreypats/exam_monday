@@ -1,21 +1,40 @@
-import {Dispatch} from "redux";
-import {AppStateType} from "./store";
+export type IncValueActionType = ReturnType<typeof incValueAC>
+export type ResetValueActionType = ReturnType<typeof resetValueAC>
+export type SetMinValueActionType = ReturnType<typeof setMinValueAC>
+export type SetMaxValueActionType = ReturnType<typeof setMaxValueAC>
+export type SetMinValueFromLSActionType = ReturnType<typeof setMinValueFromLSAC>
+
+type ActionType = IncValueActionType | ResetValueActionType | SetMinValueActionType | SetMaxValueActionType | SetMinValueFromLSActionType
 
 const initialState = {
-    value: 0
+    num: 0,
+    min: 0,
+    max: 5,
 }
 
-type InitialStateType = typeof initialState
+export type InitialStateType = typeof initialState
 
 export const counterReducer = (state: InitialStateType = initialState, action: ActionType): InitialStateType => {
     switch (action.type) {
         case 'INC-VALUE':
             return {
-                ...state, value: state.value + 1
+                ...state, num: state.num + 1
             }
-        case 'SET-VALUE-FROM-LOCAL-STORAGE':
+        case 'RESET-VALUE':
             return {
-                ...state, value: action.value
+                ...state, num: state.min
+            }
+        case 'SET-MIN-VALUE':
+            return {
+                ...state, min: action.value
+            }
+        case 'SET-MAX-VALUE':
+            return {
+                ...state, max: action.value
+            }
+        case 'SET-MIN-VALUE-FROM-LS':
+            return {
+                ...state, num: state.min
             }
         default:
             return state
@@ -24,27 +43,8 @@ export const counterReducer = (state: InitialStateType = initialState, action: A
 }
 
 export const incValueAC = () => ({type: 'INC-VALUE'} as const)
-export const setValueFromLocalStorageAC = (value: number) => ({type: 'SET-VALUE-FROM-LOCAL-STORAGE', value} as const)
+export const resetValueAC = () => ({type: 'RESET-VALUE'} as const)
+export const setMinValueAC = (value: number) => ({type: 'SET-MIN-VALUE', value} as const)
+export const setMaxValueAC = (value: number) => ({type: 'SET-MAX-VALUE', value} as const)
+export const setMinValueFromLSAC = () => ({type: 'SET-MIN-VALUE-FROM-LS'} as const)
 
-
-// THUNK - функция, которая принимает dispatch, диспатчит экшен, и в ней можно работать с сайд эффектами
-export const incValueTC = () => (dispatch: Dispatch, getState: () => AppStateType) => {
-    // получаем текущее значение currentValue
-    let currentValue = getState().counter.value
-    // записываем currentValue в localStorage
-    localStorage.setItem('value', JSON.stringify(currentValue + 1))
-    dispatch(incValueAC())
-}
-export const setValueFromLocalStorageTC = () => (dispatch: Dispatch) => {
-    let valueAsString = localStorage.getItem('value')
-    if (valueAsString) {
-        let newValue = JSON.parse(valueAsString)
-        dispatch(setValueFromLocalStorageAC(newValue))
-    }
-}
-
-
-export type IncValueActionType = ReturnType<typeof incValueAC>
-export type SetValueFromLocalStorageType = ReturnType<typeof setValueFromLocalStorageAC>
-
-type ActionType = IncValueActionType | SetValueFromLocalStorageType
